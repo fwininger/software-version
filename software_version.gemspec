@@ -4,7 +4,7 @@ require 'software_version/version'
 
 Gem::Specification.new do |s|
   s.name        = 'software_version'
-  s.version     = SoftwareVersion::VERSION
+  s.version     = '1.0.0'
   s.summary     = 'Compare two software versions'
   s.description = 'Compare two software versions with the full pattern for Linux Packages (Centos, Redhat, Arch, Debian Ubuntu) and Windows Applications'
   s.authors     = ['Florian Wininger']
