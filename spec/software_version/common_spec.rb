@@ -35,5 +35,12 @@ module SoftwareVersion
       list.sort!
       expect(list).to eq [@v1, @v3, @v2, @v5, @v4]
     end
+
+    it 'check equality' do
+      expect(@v1 == @v1).to be true
+      expect(@v2 == @v2).to be true
+      expect(@v3 == @v3).to be true
+      expect(@v4 == @v4).to be true
+    end
   end
 end
