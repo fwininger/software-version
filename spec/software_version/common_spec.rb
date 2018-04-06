@@ -42,5 +42,12 @@ module SoftwareVersion
       expect(@v3 == @v3).to be true
       expect(@v4 == @v4).to be true
     end
+
+    it 'compare 1.00 < 1.0.0' do
+      a = Version.new('1.00')
+      b = Version.new('1.0.0')
+
+      expect(a < b).to be true
+    end
   end
 end

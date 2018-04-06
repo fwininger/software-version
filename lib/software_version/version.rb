@@ -7,26 +7,16 @@ module SoftwareVersion
 
     def initialize(version)
       @v = version.to_s
-      @sv = @v.gsub(/el[5-7](?:_[0-9])?/, '').scan(/(?:[0-9]+|[A-Za-z]+)/)
+      @sv = @v.gsub(/el[5-7](?:_[0-9])?/, '').scan(/[^-^+^~]+/).map { |x| x.scan(/(?:[0-9]+|[A-Za-z]+)/) }
     end
 
     def <=>(other)
-      # Split each sub part
-      @sv.each_with_index do |s, index|
-        # brek if the size of the array mismatch
-        break if other.sv.size <= index
 
-        # check if the subpart is numeric
-        if numeric?(s) && numeric?(other.sv[index])
-          return s.to_f <=> other.sv[index].to_f if (s.to_f <=> other.sv[index].to_f).nonzero?
+      @sv.each_index do |k|
+        if (res = sub_compare(other, k)).nonzero?
+          return res
         end
-
-        return s <=> other.sv[index] if (s <=> other.sv[index]).nonzero?
       end
-
-      # if the two part are equals, check the size of the vector
-      return 1 if other.sv.size < @sv.size
-      return -1 if other.sv.size > @sv.size
 
       return @v <=> other.v if (@v <=> other.v).nonzero?
       0
@@ -41,6 +31,30 @@ module SoftwareVersion
     end
 
     private
+
+    def sub_compare(other, k = 0)
+      # Split each sub part
+      @sv[k].each_with_index do |s, index|
+        # brek if the size of the array mismatch
+        break if other.sv[k].size <= index
+
+        # check if the subpart is numeric
+        if numeric?(s) && numeric?(other.sv[k][index])
+          if (s.to_f <=> other.sv[k][index].to_f).nonzero?
+            return s.to_f <=> other.sv[k][index].to_f
+          else
+            next
+          end
+        end
+
+        return s <=> other.sv[k][index] if (s <=> other.sv[k][index]).nonzero?
+      end
+
+      # if the two part are equals, check the size of the vector
+      return 1 if other.sv[k].size < @sv[k].size
+      return -1 if other.sv[k].size > @sv[k].size
+      0
+    end
 
     def numeric?(obj)
       true if Float(obj)

@@ -76,7 +76,7 @@ module SoftwareVersion
       @version_array = fixture("rpm_version_sort.txt").split("\n")
       @version_array.each_index do |k|
         it "compare #{@version_array[k]} < #{@version_array[k+1]}" do
-          return if @version_array[k+1] == ""
+          next if @version_array[k+1].nil? || @version_array[k+1] == ""
           a = Version.new(@version_array[k])
           b = Version.new(@version_array[k+1])
           expect(a < b).to be true
