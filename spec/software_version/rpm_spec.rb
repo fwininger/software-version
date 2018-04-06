@@ -67,5 +67,21 @@ module SoftwareVersion
       b = Version.new('3.19.1-2.el5_11.i386')
       expect(a == b).to be false
     end
+
+    context "Sort file test" do
+      before(:all) do
+        @version_array = fixture("rpm_version_sort.txt").split("\n")
+      end
+
+      @version_array = fixture("rpm_version_sort.txt").split("\n")
+      @version_array.each_index do |k|
+        it "compare #{@version_array[k]} < #{@version_array[k+1]}" do
+          return if @version_array[k+1] == ""
+          a = Version.new(@version_array[k])
+          b = Version.new(@version_array[k+1])
+          expect(a < b).to be true
+        end
+      end
+    end
   end
 end
