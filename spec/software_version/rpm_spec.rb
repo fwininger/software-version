@@ -68,6 +68,27 @@ module SoftwareVersion
       expect(a == b).to be false
     end
 
+    it 'compare 0.2.7-1.el6.noarch == 0.2.7-1.el7' do
+      a = Version.new('0.2.7-1.el6.noarch')
+      b = Version.new('0.2.7-1.el7')
+
+      expect(a == b).to be true
+    end
+
+    it 'compare 0.3.1-3.el7sat < 0.3.1-3.1.el6' do
+      a = Version.new('0.3.1-3.el7sat')
+      b = Version.new('0.3.1-3.1.el6')
+
+      expect(a < b).to be true
+    end
+
+    it 'compare 0.3.0-4.el7 == 0.3.0-4.el5_5' do
+      a = Version.new('0.3.0-4.el7')
+      b = Version.new('0.3.0-4.el5_5')
+
+      expect(a == b).to be true
+    end
+
     context "Sort file test" do
       before(:all) do
         @version_array = fixture("rpm_version_sort.txt").split("\n")

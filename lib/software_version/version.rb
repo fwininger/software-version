@@ -7,7 +7,7 @@ module SoftwareVersion
 
     def initialize(version)
       @v = version.to_s
-      @sv = @v.gsub(/el[5-7](?:_[0-9])?/, '').scan(/[^-^+^~]+/).map { |x| x.scan(/(?:[0-9]+|[A-Za-z]+)/) }
+      @sv = remove_el_version(@v).scan(/[^-^+^~]+/).map { |x| x.scan(/(?:[0-9A-Za-z]+)/) }
     end
 
     def <=>(other)
@@ -18,7 +18,7 @@ module SoftwareVersion
         end
       end
 
-      return @v <=> other.v if (@v <=> other.v).nonzero?
+      return remove_el_version(@v) <=> remove_el_version(other.v) if (@v <=> other.v).nonzero?
       0
     end
 
@@ -60,6 +60,10 @@ module SoftwareVersion
       true if Float(obj)
     rescue StandardError
       false
+    end
+
+    def remove_el_version(v)
+      v.gsub(/\.el[5-7](?:_[0-9])?(?:sat|aos|op|cf)?(?:.noarch|.x86_64)?\z/, '')
     end
   end
 end
