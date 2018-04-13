@@ -49,5 +49,41 @@ module SoftwareVersion
 
       expect(a < b).to be true
     end
+
+    it 'define nil version' do
+      expect(Version.new(nil).to_s).to eql('')
+    end
+
+    it 'define empty version' do
+      expect(Version.new('').to_s).to eql('')
+    end
+
+    it 'compare nil version with version' do
+      a = Version.new('')
+      b = Version.new('1.0.0')
+
+      expect(a < b).to be true
+    end
+
+    it 'compare version with nil version' do
+      a = Version.new('1.0.0')
+      b = Version.new('')
+
+      expect(a > b).to be true
+    end
+
+    it 'compare nil version with version' do
+      a = Version.new(nil)
+      b = Version.new('1.0.0')
+
+      expect(a < b).to be true
+    end
+
+    it 'compare version with nil version' do
+      a = Version.new('1.0.0')
+      b = Version.new(nil)
+
+      expect(a > b).to be true
+    end
   end
 end

@@ -36,7 +36,7 @@ module SoftwareVersion
       # Split each sub part
       @sv[k].each_with_index do |s, index|
         # brek if the size of the array mismatch
-        break if other.sv[k].size <= index
+        break if other.sv[k].nil? || other.sv[k].size <= index
 
         # check if the subpart is numeric
         if numeric?(s) && numeric?(other.sv[k][index])
@@ -51,7 +51,7 @@ module SoftwareVersion
       end
 
       # if the two part are equals, check the size of the vector
-      return 1 if other.sv[k].size < @sv[k].size
+      return 1 if other.sv[k].nil? || other.sv[k].size < @sv[k].size
       return -1 if other.sv[k].size > @sv[k].size
       0
     end
