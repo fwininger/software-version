@@ -7,7 +7,7 @@ TODO
 ## Install
 
 ```
-gem install sofware-version
+gem install software_version
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ TODO
 ## Test
 
 ```sh
-cat spec/fixtures/pacman_version.txt | sort --version-sort > spec/fixtures/pacman_version_sort.txt
+cat spec/fixtures/pacman_version.txt | sort | sort --version-sort > spec/fixtures/pacman_version_sort.txt
 ```
 
 ## Note on Patches & Pull Requests
