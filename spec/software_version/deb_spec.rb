@@ -61,7 +61,7 @@ module SoftwareVersion
           next if @version_array[k+1].nil? || @version_array[k+1] == ""
           a = Version.new(@version_array[k])
           b = Version.new(@version_array[k+1])
-          expect(a < b).to be true
+          expect(a <= b).to be true
         end
       end
     end
