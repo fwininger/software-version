@@ -85,5 +85,143 @@ module SoftwareVersion
 
       expect(a > b).to be true
     end
+
+    describe '#major' do
+      subject { version.major }
+
+      context 'when Version is nil' do
+        let(:version) { Version.new(nil) }
+
+        it 'returns nil' do
+          expect(subject).to eq nil
+        end
+      end
+
+      context 'when Version is empty' do
+        let(:version) { Version.new('') }
+
+        it 'returns nil' do
+          expect(subject).to eq nil
+        end
+      end
+
+      context 'when Version exist' do
+        context 'with 3 parts' do
+          let(:version) { Version.new('11.22.33') }
+
+          it 'returns 11' do
+            expect(subject).to eq '11'
+          end
+        end
+
+        context 'with 2 parts' do
+          let(:version) { Version.new('11.22') }
+
+          it 'returns 11' do
+            expect(subject).to eq '11'
+          end
+        end
+
+        context 'with 1 part' do
+          let(:version) { Version.new('11') }
+
+          it 'returns 11' do
+            expect(subject).to eq '11'
+          end
+        end
+      end
+    end
+
+    describe '#minor' do
+      subject { version.minor }
+
+      context 'when Version is nil' do
+        let(:version) { Version.new(nil) }
+
+        it 'returns nil' do
+          expect(subject).to eq nil
+        end
+      end
+
+      context 'when Version is empty' do
+        let(:version) { Version.new('') }
+
+        it 'returns nil' do
+          expect(subject).to eq nil
+        end
+      end
+
+      context 'when Version exist' do
+        context 'with 3 parts' do
+          let(:version) { Version.new('11.22.33') }
+
+          it 'returns 22' do
+            expect(subject).to eq '22'
+          end
+        end
+
+        context 'with 2 parts' do
+          let(:version) { Version.new('11.22') }
+
+          it 'returns 22' do
+            expect(subject).to eq '22'
+          end
+        end
+
+        context 'with 1 part' do
+          let(:version) { Version.new('11') }
+
+          it 'returns nil' do
+            expect(subject).to eq nil
+          end
+        end
+      end
+    end
+
+    describe '#patch' do
+      subject { version.patch }
+
+      context 'when Version is nil' do
+        let(:version) { Version.new(nil) }
+
+        it 'returns nil' do
+          expect(subject).to eq nil
+        end
+      end
+
+      context 'when Version is empty' do
+        let(:version) { Version.new('') }
+
+        it 'returns nil' do
+          expect(subject).to eq nil
+        end
+      end
+
+      context 'when Version exist' do
+        context 'with 3 parts' do
+          let(:version) { Version.new('11.22.33') }
+
+          it 'returns 33' do
+            expect(subject).to eq '33'
+          end
+        end
+
+        context 'with 2 parts' do
+          let(:version) { Version.new('11.22') }
+
+          it 'returns nil' do
+            expect(subject).to eq nil
+          end
+        end
+
+        context 'with 1 part' do
+          let(:version) { Version.new('11') }
+
+          it 'returns nil' do
+            expect(subject).to eq nil
+          end
+        end
+      end
+    end
   end
 end

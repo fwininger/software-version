@@ -30,6 +30,22 @@ module SoftwareVersion
       to_s
     end
 
+    def major
+      return nil if @sv.empty? || @sv[0].empty?
+      @sv[0][0]
+    end
+
+    def minor
+      return nil if @sv.empty? || @sv[0].empty?
+      @sv[0][1]
+    end
+
+    def patch
+      return nil if @sv.empty? || @sv[0].empty?
+      @sv[0][2]
+    end
+
+
     private
 
     def sub_compare(other, k = 0)
