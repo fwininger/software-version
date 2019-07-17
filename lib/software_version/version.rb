@@ -2,28 +2,39 @@ module SoftwareVersion
   class Version
     include Comparable
 
-    attr_reader :v
-    attr_reader :sv
+    attr_reader :v,
+                :epoch,
+                :version,
+                :revision,
+                :release,
+                :arch
 
-    def initialize(version)
-      @v = version.to_s
-      @sv = @v.gsub(/el[5-7](?:_[0-9])?/, '').scan(/[^-^+^~]+/).map { |x| x.scan(/(?:[0-9]+|[A-Za-z]+)/) }
+    def initialize(raw_version)
+      @v = raw_version
+      parse_raw_version(to_s)
     end
 
     def <=>(other)
+      raise ArgumentError unless other.class == SoftwareVersion::Version
 
-      @sv.each_index do |k|
-        if (res = sub_compare(other, k)).nonzero?
-          return res
-        end
-      end
+      # Compare the epoch of both versions
+      result = version_compare_part(@epoch, other.epoch)
+      return result if result.nonzero?
 
-      return @v <=> other.v if (@v <=> other.v).nonzero?
-      0
+      # Compare the version of both versions
+      result = version_compare_part(@version, other.version)
+      return result if result.nonzero?
+
+      # Compare the revision of both versions
+      result = version_compare_part(@revision, other.revision)
+      return result if result.nonzero?
+
+      # Compare the release of both versions
+      version_compare_part(@release, other.release)
     end
 
     def to_s
-      @v
+      @v.to_s
     end
 
     def to_str
@@ -31,45 +42,113 @@ module SoftwareVersion
     end
 
     def major
-      return nil if @sv.empty? || @sv[0].empty?
-      @sv[0][0]
+      sv[0]
     end
 
     def minor
-      return nil if @sv.empty? || @sv[0].empty?
-      @sv[0][1]
+      sv[1]
     end
 
     def patch
-      return nil if @sv.empty? || @sv[0].empty?
-      @sv[0][2]
+      sv[2]
     end
-
 
     private
 
-    def sub_compare(other, k = 0)
-      # Split each sub part
-      @sv[k].each_with_index do |s, index|
-        # brek if the size of the array mismatch
-        break if other.sv[k].nil? || other.sv[k].size <= index
+    # parse the raw version to separate the version, the epoch and the revision
+    def parse_raw_version(raw_version)
+      version = raw_version
 
-        # check if the subpart is numeric
-        if numeric?(s) && numeric?(other.sv[k][index])
-          if (s.to_f <=> other.sv[k][index].to_f).nonzero?
-            return s.to_f <=> other.sv[k][index].to_f
-          else
-            next
-          end
-        end
-
-        return s <=> other.sv[k][index] if (s <=> other.sv[k][index]).nonzero?
+      if (parsed_raw = version.match(/\A([^:]*):(.+)\z/))
+        @epoch = parsed_raw[1]
+        version = parsed_raw[2]
+      else
+        @epoch = '0'
       end
 
-      # if the two part are equals, check the size of the vector
-      return 1 if other.sv[k].nil? || other.sv[k].size < @sv[k].size
-      return -1 if other.sv[k].size > @sv[k].size
-      0
+      if (parsed_release = version.match(/(.*)\.(el[4-8](?:_\d+(?:\.\d+)?)?)/))
+        version = parsed_release[1]
+        @release = parsed_release[2]
+      else
+        @release = '0'
+      end
+
+      if (parsed_version = version.match(/(.*)-(.*)$/))
+        @version = parsed_version[1]
+        @revision = parsed_version[2]
+      else
+        @version = version
+        @revision = '0'
+      end
+    end
+
+    # Parse the version to get the major, minor and patch parts
+    def sv
+      @sv ||= version.scan(/(?:\d+|\D+)/)
+    end
+
+    def version_split_digits(part)
+      part.scan(/(?:\d+|\D+)/)
+    end
+
+    def version_compare_part(self_part, other_part)
+      if (self_part <=> other_part) == 0
+        return 0
+      end
+
+      self_part = version_split_digits(self_part)
+      other_part = version_split_digits(other_part)
+
+      index = 0
+      loop do
+        return 0 unless self_part[index] || other_part[index]
+        self_part[index] ||= 0
+        other_part[index] ||= 0
+
+        if (self_part[index] <=> other_part[index]) == 0
+          index += 1
+          next
+        end
+
+        if numeric?(self_part[index]) && numeric?(other_part[index])
+          # Numerical comparison
+          result = self_part[index].to_f <=> other_part[index].to_f
+          return result if result.nonzero?
+        else
+          # String comparison
+          result = version_compare_string(self_part[index].to_s, other_part[index].to_s)
+          return result if result.nonzero?
+        end
+
+        index += 1
+      end
+    end
+
+    def version_compare_string(self_part, other_part)
+      self_part = self_part.chars.map { |x| version_order(x) }
+      other_part = other_part.chars.map { |x| version_order(x) }
+
+      index = 0
+
+      loop do
+        return 0 unless self_part[index] || other_part[index]
+        self_part[index] ||= 0 # Default order for "no character"
+        other_part[index] ||= 0
+        return 1 if self_part[index] > other_part[index]
+        return -1 if self_part[index] < other_part[index]
+        index += 1
+      end
+    end
+
+    # convert character into number
+    def version_order(part)
+      if part.eql? '~'
+        -1
+      elsif part =~ /^[A-Za-z\d]$/
+        part.ord
+      else
+        part.ord + 128
+      end
     end
 
     def numeric?(obj)

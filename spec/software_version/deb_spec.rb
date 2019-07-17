@@ -50,6 +50,18 @@ module SoftwareVersion
       expect(a < b).to be true
     end
 
+    it 'check debian packages version numbers 3' do
+      a = Version.new('2.7.15-4ubuntu4~18.04')
+      b = Version.new('2.7.15~rc1-1ubuntu0.1 ')
+      expect(a > b).to be true
+    end
+
+    it 'check debian packages version numbers 3' do
+      a = Version.new('1:1.10')
+      b = Version.new('5.36')
+      expect(a > b).to be true
+    end
+
     context "Sort file test" do
       before(:all) do
         @version_array = fixture("deb_version_sort.txt").split("\n")
@@ -57,11 +69,11 @@ module SoftwareVersion
 
       @version_array = fixture("deb_version_sort.txt").split("\n")
       @version_array.each_index do |k|
-        it "compare #{@version_array[k]} < #{@version_array[k+1]}" do
+        it "compare #{@version_array[k]} <= #{@version_array[k+1]}" do
           next if @version_array[k+1].nil? || @version_array[k+1] == ""
           a = Version.new(@version_array[k])
           b = Version.new(@version_array[k+1])
-          expect(a < b).to be true
+          expect(a <= b).to be true
         end
       end
     end

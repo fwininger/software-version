@@ -41,7 +41,7 @@ module SoftwareVersion
     it 'check version 10' do
       a = Version.new('4.1.1-43.P1.el6.centos')
       b = Version.new('4.1.1-43.P1.el6')
-      expect(a > b).to be true
+      expect(a == b).to be true
     end
 
     it 'check version 15' do
@@ -53,19 +53,19 @@ module SoftwareVersion
     it 'check equivalent between i686 et x86_64' do
       a = Version.new('9.3.6-25.P1.el5_11.5.i386')
       b = Version.new('9.3.6-25.P1.el5_11.5.x86_64')
-      expect(a == b).to be false
+      expect(a == b).to be true
     end
 
     it 'check equivalent between i686 et x86_64' do
       a = Version.new('3.19.1-2.el5_11.x86_64')
       b = Version.new('3.19.1-2.el5_11.i386')
-      expect(a == b).to be false
+      expect(a == b).to be true
     end
 
     it 'check equivalent between i686 et x86_64' do
       a = Version.new('3.19.1-2.el5_11.i686')
       b = Version.new('3.19.1-2.el5_11.i386')
-      expect(a == b).to be false
+      expect(a == b).to be true
     end
 
     context "Sort file test" do
@@ -75,11 +75,11 @@ module SoftwareVersion
 
       @version_array = fixture("rpm_version_sort.txt").split("\n")
       @version_array.each_index do |k|
-        it "compare #{@version_array[k]} < #{@version_array[k+1]}" do
+        it "compare #{@version_array[k]} <= #{@version_array[k+1]}" do
           next if @version_array[k+1].nil? || @version_array[k+1] == ""
           a = Version.new(@version_array[k])
           b = Version.new(@version_array[k+1])
-          expect(a < b).to be true
+          expect(a <= b).to be true
         end
       end
     end
