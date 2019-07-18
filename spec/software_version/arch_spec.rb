@@ -14,6 +14,12 @@ module SoftwareVersion
       expect(b > a).to be_truthy
     end
 
+    it 'checks arch packages version' do
+      a = Version.new('4.2.8p2-1')
+      b = Version.new('4.2.8-1')
+      expect(b < a).to be_truthy
+    end
+
     context 'Sort file test' do
       before(:all) do
         @version_array = fixture('pacman_version_sort.txt').split("\n")
