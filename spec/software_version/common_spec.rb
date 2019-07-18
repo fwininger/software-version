@@ -37,10 +37,10 @@ module SoftwareVersion
     end
 
     it 'check equality' do
-      expect(@v1 == @v1).to be true
-      expect(@v2 == @v2).to be true
-      expect(@v3 == @v3).to be true
-      expect(@v4 == @v4).to be true
+      expect(@v1 == Version.new('1.0.0')).to be true
+      expect(@v2 == Version.new('1.5.5')).to be true
+      expect(@v3 == Version.new('1.4.8')).to be true
+      expect(@v4 == Version.new('1.10.5')).to be true
     end
 
     it 'compare 1.00 < 1.0.0' do

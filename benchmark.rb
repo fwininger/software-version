@@ -6,6 +6,7 @@ FIXTURES_FILES_PATH = './spec/fixtures/*'.freeze
 def compare_versions(versions)
   versions.each_index do |k|
     next if versions[k + 1].nil? || versions[k + 1] == ''
+
     a = SoftwareVersion::Version.new(versions[k])
     b = SoftwareVersion::Version.new(versions[k + 1])
     a < b

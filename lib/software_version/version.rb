@@ -92,9 +92,7 @@ module SoftwareVersion
     end
 
     def version_compare_part(self_part, other_part)
-      if (self_part <=> other_part) == 0
-        return 0
-      end
+      return 0 if (self_part <=> other_part) == 0
 
       self_part = version_split_digits(self_part)
       other_part = version_split_digits(other_part)
@@ -102,6 +100,7 @@ module SoftwareVersion
       index = 0
       loop do
         return 0 unless self_part[index] || other_part[index]
+
         self_part[index] ||= 0
         other_part[index] ||= 0
 
@@ -132,10 +131,12 @@ module SoftwareVersion
 
       loop do
         return 0 unless self_part[index] || other_part[index]
+
         self_part[index] ||= 0 # Default order for "no character"
         other_part[index] ||= 0
         return 1 if self_part[index] > other_part[index]
         return -1 if self_part[index] < other_part[index]
+
         index += 1
       end
     end
