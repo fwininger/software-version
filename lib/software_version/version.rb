@@ -84,7 +84,7 @@ module SoftwareVersion
 
     # Parse the version to get the major, minor and patch parts
     def sv
-      @sv ||= version.scan(/(?:\d+|\D+)/)
+      @sv ||= version.scan(/(?:\d+|[a-zA-Z]+)/)
     end
 
     def version_split_digits(part)
