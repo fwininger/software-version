@@ -43,5 +43,5 @@ and send a pull request.
 
 ## Copyright
 
-Copyright (c) 2018 Florian Wininger. See LICENSE for details.
-Copyright (c) 2019 Cyberwatch. See LICENSE for details.
+Copyright (c) 2018-2021 Florian Wininger. See LICENSE for details.
+Copyright (c) 2019-2021 Cyberwatch. See LICENSE for details.
