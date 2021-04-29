@@ -9,7 +9,7 @@ Compare two software versions with the full pattern for Linux Packages (Centos, 
 ## Install
 
 ```
-gem 'software_version', git: 'https://github.com/Cyberwatch/sofware-version.git'
+gem 'software_version', git: 'https://github.com/Cyberwatch/software-version.git'
 ```
 
 ## Usage
