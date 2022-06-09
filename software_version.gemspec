@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.files         = `git ls-files -z`.split("\x0")
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
 
-  s.add_development_dependency 'bundler', '~> 1.16'
+  s.add_development_dependency 'bundler', '~> 2.3'
   s.add_development_dependency 'rake', '~> 12.3'
   s.add_development_dependency 'rspec', '~> 3.7'
   s.add_development_dependency 'rubocop', '~> 0.73'
